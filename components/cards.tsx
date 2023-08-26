@@ -4,80 +4,77 @@ import React, { useEffect, useState } from "react";
 import { useGame } from "../contexts/game-context";
 import Card from "./card";
 import { generateCards } from "../lib/generateCard";
-
+import { levelData } from "../lib/level-data";
 
 type Card = {
-    symbol: string;
-    position: string;
-    delay: number;
-    handleClick: (e: any) => void;
+  symbol: string;
+  position: string;
+  delay: number;
+  handleClick: (e: any) => void;
 };
 
 type Cards = {
-    symbol: string;
-    position: any;
-}
-
+  symbol: string;
+  position: any;
+};
 
 export default function Cards() {
-    const [cards, setCards] = useState<any>({})
-    const {
-        score,
-        setScore,
-        target,
-        setTarget,
-        health,
-        setHealth,
-        gameState,
-        setGameState,
-        level,
-        setLevel,
-      } = useGame();
-
-    useEffect(() => {
-        setCards(generateCards(50, ["あ", "い", "あ", "う", "あ", "え", "お"]))
-    }, [])
-
-    useEffect(() => {
-        setCards(generateCards(50, ["あ", "い", "あ", "う", "あ", "え", "お"]))
-        setTarget(level === 1 ? {symbol: "あ", sound: "a"} : level === 2 ? {symbol: "い", sound: "i"} : level === 3 ? {symbol: "う", sound: "u"} : level === 4 ? {symbol: "え", sound: "e"} : {symbol: "お", sound: "o"})
-        setHealth(3);
-    }, [level, setTarget, setHealth])
+  const [cards, setCards] = useState<any>({});
+  const {
+    score,
+    setScore,
+    target,
+    setTarget,
+    health,
+    setHealth,
+    gameState,
+    setGameState,
+    level,
+    setLevel,
+  } = useGame();
 
 
 
-    const restart = () => {
-        setScore(0);
-        setGameState("playing");
-        setHealth(3);
+  useEffect(() => {
+    const levelNumberofCards = levelData[level - 1].numberOfCards;
+    const levelSymbols = levelData[level - 1].symbols;
+    const levelTarget = levelData[level - 1].target;
+    setCards(generateCards(levelNumberofCards, levelSymbols));
+    setTarget(levelTarget);
+    setHealth(3);
+  }, [level, setTarget, setHealth]);
+
+  const restart = () => {
+    setScore(0);
+    setGameState("playing");
+    setHealth(3);
+  };
+  const nextLevel = () => {
+    setScore(0);
+    setGameState("playing");
+    setLevel(level + 1);
+  };
+
+  useEffect(() => {
+    if (health === 0) {
+      setGameState("game-over");
     }
-    const nextLevel = () => {
-        setScore(0);
-        setGameState("playing");
-        setLevel(level + 1);
+  }, [health, setGameState]);
+
+  useEffect(() => {
+    if (score === 5) {
+      setGameState("level-up");
     }
-
-    useEffect(() => {
-        if (health === 0) {
-            setGameState("game-over");
-        }
-    }, [health, setGameState])
-
-    useEffect(() => {
-        if (score === 5) {
-            if (level === 5) { 
-                setGameState("won");
-            } else {
-                setGameState("level-up");
-            }
-        }
-    }, [score, setGameState])
+  }, [score, setGameState]);
 
   const handleClick = (e: any) => {
     if (e.target.innerText === target.symbol) {
       e.target.parentElement.classList.add("correct-animation");
       e.target.classList.add("correct");
       setScore(score + 1);
+      if (level === 5) {
+        setGameState("won");
+      }
     } else if (e.target.innerText !== target.symbol) {
       e.target.parentElement.classList.add("incorrect-animation");
       e.target.classList.add("incorrect");
@@ -120,8 +117,7 @@ export default function Cards() {
         </button>
       </div>
     );
-  }
-  else if (gameState === "level-up") {
+  } else if (gameState === "level-up") {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center bg-black/60 absolute z-[999] gap-5">
         <h2 className="text-4xl text-white">すごい！</h2>
@@ -133,8 +129,7 @@ export default function Cards() {
         </button>
       </div>
     );
-  }
-  else if (gameState === "won") {
+  } else if (gameState === "won") {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center bg-green-900/60 absolute z-[999] gap-5">
         <h2 className="text-4xl text-white text-center">You Won!</h2>
