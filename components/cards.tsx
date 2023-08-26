@@ -42,7 +42,10 @@ export default function Cards() {
     setCards(generateCards(levelNumberofCards, levelSymbols));
     setTarget(levelTarget);
     setHealth(3);
-  }, [level, setTarget, setHealth]);
+    if (level === 5) {
+        setGameState("won");
+      }
+  }, [level, setTarget, setHealth, setGameState]);
 
   const restart = () => {
     setScore(0);
@@ -72,9 +75,6 @@ export default function Cards() {
       e.target.parentElement.classList.add("correct-animation");
       e.target.classList.add("correct");
       setScore(score + 1);
-      if (level === 5) {
-        setGameState("won");
-      }
     } else if (e.target.innerText !== target.symbol) {
       e.target.parentElement.classList.add("incorrect-animation");
       e.target.classList.add("incorrect");
