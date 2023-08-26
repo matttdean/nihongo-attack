@@ -2,26 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@keyframes moveDown {
+    0% {
+        transform: translateY(-200px);
+    }
+    100% {
+        transform: translateY(calc(100dvh - 112px));
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.card {
+  animation: moveDown 5s linear;
+  animation-fill-mode: both;
+  
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.left {
+  left: 20px;
+}
+.right {
+  right: 20px
+}
+.center  {
+  right: 50%;
+  translate: 50%;
+}
+.correct {
+  transition: background-color 600ms, scale 600ms, opacity 600ms;
+  background-color: #4CAF50;
+  opacity: 0;
+  animation-play-state: paused;
+}
+.correct-animation {
+  transition: background-color 600ms, scale 600ms, opacity 1000ms;
+  background-color: #4CAF50;
+  opacity: 0;
+
+  animation-play-state: paused;
+  transition: 600ms;
+  
+}
+.incorrect {
+  transition: background-color 600ms, scale 600ms, opacity 600ms;
+  background-color: #f44336;
+  opacity: 0;
+  animation-play-state: paused;
+}
+.incorrect-animation {
+  transition: background-color 600ms, scale 600ms, opacity 600ms;
+  background-color: #f44336;
+  opacity: 0;
+
+  animation-play-state: paused;
+  transition: 600ms;
+  
 }
