@@ -119,7 +119,7 @@ const { user } = useUser();
       <div className="w-full h-screen flex flex-col gap-10 items-center sm:justify-center bg-zinc-800 fixed inset-0 z-[999]">
         <div className="flex flex-col gap-10 justify-center items-center w-10/12 mt-[40%] sm:mt-0  max-w-[40rem] h-[20rem] bg-zinc-950 rounded-md">
           <h1 className="text-white text-5xl text-center font-semibold">NIHONGO ATTACK</h1>
-          {user && <h2 className="text-white text-2xl text-center font-semibold">Welcome, {user && user?.name}!</h2>}
+          {user !== null && <h2 className="text-white text-2xl text-center font-semibold">Welcome, {user.name}!</h2>}
           <div className="flex gap-5">
             <button
               className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
