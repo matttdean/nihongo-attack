@@ -1,6 +1,9 @@
+"use client";
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import UserContextProvider from '@/contexts/user-context';
+import GameContextProvider from '@/contexts/game-context';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-center bg-zinc-700 overflow-hidden overscroll-none`}>{children}</body>
+      <body className={`${inter.className} flex justify-center bg-zinc-600 overflow-hidden overscroll-none`}>
+        <UserContextProvider>
+          <GameContextProvider>
+        {children}
+          </GameContextProvider>
+        </UserContextProvider>
+        </body>
     </html>
   )
 }

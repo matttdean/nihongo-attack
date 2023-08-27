@@ -1,10 +1,9 @@
 'use client';
 
-import { type } from 'os';
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 
 
-type gameState = "paused" | "playing" | "game-over" | "level-up" | "won";
+type gameState = "main-menu" |  "paused" | "playing" | "game-over" | "level-up" | "won";
 
 type GameContextProviderProps = {
     children: React.ReactNode;
@@ -19,8 +18,10 @@ type GameContextType = {
     setHealth: React.Dispatch<React.SetStateAction<number>>;
     level: number;
     setLevel: React.Dispatch<React.SetStateAction<number>>;
-    gameState: "paused" | "playing" | "game-over" | "level-up"| "won";
+    gameState: "main-menu" | "paused" | "playing" | "game-over" | "level-up"| "won";
     setGameState: React.Dispatch<React.SetStateAction<gameState>>;
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -31,7 +32,8 @@ export default function GameContextProvider({ children}: GameContextProviderProp
     const [target, setTarget] = useState({symbol: "あ", sound: "a"});
     const [health, setHealth] = useState<number>(3);
     const [level, setLevel] = useState<number>(1);
-    const [gameState, setGameState] = useState<gameState>("paused");
+    const [gameState, setGameState] = useState<gameState>("main-menu");
+    const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <GameContext.Provider value={{
@@ -44,7 +46,9 @@ export default function GameContextProvider({ children}: GameContextProviderProp
         level,
         setLevel,
         gameState,
-        setGameState
+        setGameState,
+        loading,
+        setLoading
     }}>
         {children}
     </GameContext.Provider>

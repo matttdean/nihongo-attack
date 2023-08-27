@@ -8,6 +8,7 @@ type CardProps = {
   symbol: string;
   delay: number;
   handleClick: (e: any) => void;
+  subtractHealth: () => void;
 };
 
 export default function Card({
@@ -15,6 +16,7 @@ export default function Card({
   symbol,
   delay,
   handleClick,
+  subtractHealth,
 }: CardProps) {
   const [isBottom, setIsBottom] = useState<boolean>(false);
   const [cardPosition, setCardPosition] = useState(0);
@@ -24,21 +26,20 @@ export default function Card({
   useEffect(() => {
     cardHitBottom(delay);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
+  }, []);
 
-    useEffect(() => {
-     if (symbol === target.symbol && isBottom && !wasClicked.current) {
-         setHealth(health - 1);
-     }
+  useEffect(() => {
+    if (symbol === target.symbol && isBottom && !wasClicked.current) {
+      subtractHealth();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [target, isBottom])
+  }, [target, isBottom]);
 
-  const cardHitBottom = (delay: number) =>  {
+  const cardHitBottom = (delay: number) => {
     setTimeout(() => {
-    setIsBottom(true);
-    }, 5000 + (1000 * delay))
-  }
-  
+      setIsBottom(true);
+    }, 5000 + 1000 * delay);
+  };
 
   if (!isBottom) {
     return (
@@ -50,7 +51,7 @@ export default function Card({
           onClick={(e) => {
             handleClick(e);
             wasClicked.current = true;
-        }}
+          }}
           className="text-black text-3xl  font-semibold text-center cursor-pointer w-20 h-28 bg-white rounded-md flex justify-center items-center absolute z-10"
         >
           {symbol}

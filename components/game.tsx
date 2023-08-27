@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useGame } from "../contexts/game-context";
+import { useUser } from "../contexts/user-context";
 import Card from "./card";
 import { generateCards } from "../lib/generateCard";
 import { levelData } from "../lib/level-data";
+import Link from "next/link";
 
 type Card = {
   symbol: string;
@@ -13,12 +15,12 @@ type Card = {
   handleClick: (e: any) => void;
 };
 
-type Cards = {
+type Game = {
   symbol: string;
   position: any;
 };
 
-export default function Cards() {
+export default function Game({ damageRef }: { damageRef: any} ) {
   const [cards, setCards] = useState<any>({});
   const {
     score,
@@ -31,9 +33,11 @@ export default function Cards() {
     setGameState,
     level,
     setLevel,
+    loading,
+    setLoading,
   } = useGame();
 
-
+const { user } = useUser();
 
   useEffect(() => {
     const levelNumberofCards = levelData[level - 1].numberOfCards;
@@ -42,9 +46,6 @@ export default function Cards() {
     setCards(generateCards(levelNumberofCards, levelSymbols));
     setTarget(levelTarget);
     setHealth(3);
-    if (level === 5) {
-        setGameState("won");
-      }
   }, [level, setTarget, setHealth, setGameState]);
 
   const restart = () => {
@@ -58,6 +59,15 @@ export default function Cards() {
     setLevel(level + 1);
   };
 
+  const subtractHealth = () => {
+    setHealth(health - 1);
+    console.log(damageRef.current);
+    damageRef.current.classList.add("headShake");
+    setTimeout(() => {
+        damageRef.current.classList.remove("headShake");
+    }, 600)
+    };
+
   useEffect(() => {
     if (health === 0) {
       setGameState("game-over");
@@ -66,8 +76,13 @@ export default function Cards() {
 
   useEffect(() => {
     if (score === 5) {
+        if (level === 5 || level === 10 || level === 15 || level === 20 || level === 25 || level === 30 || level === 35 || level === 40 || level === 45 || level === 50 || level === 55 || level === 60 || level === 65 || level === 70 || level === 75 || level === 80 || level === 85 || level === 90 || level === 95 || level === 100) {
+            setGameState("won");
+          } else {
       setGameState("level-up");
+          }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, setGameState]);
 
   const handleClick = (e: any) => {
@@ -78,7 +93,7 @@ export default function Cards() {
     } else if (e.target.innerText !== target.symbol) {
       e.target.parentElement.classList.add("incorrect-animation");
       e.target.classList.add("incorrect");
-      setHealth(health - 1);
+      subtractHealth();
     }
   };
   if (gameState === "playing") {
@@ -91,13 +106,41 @@ export default function Cards() {
             position={card.position}
             delay={index}
             handleClick={handleClick}
+            subtractHealth={subtractHealth}
           />
         ))}
       </>
     );
-  } else if (gameState === "paused") {
+  } 
+  
+  else if (gameState === "main-menu") {
+
     return (
-      <div className="w-full h-screen flex justify-center items-center bg-black/60 absolute z-[999]">
+      <div className="w-full h-screen flex flex-col gap-10 items-center sm:justify-center bg-zinc-800 fixed inset-0 z-[999]">
+        <div className="flex flex-col gap-10 justify-center items-center w-10/12 mt-[40%] sm:mt-0  max-w-[40rem] h-[20rem] bg-zinc-950 rounded-md">
+          <h1 className="text-white text-5xl text-center font-semibold">NIHONGO ATTACK</h1>
+          {user && <h2 className="text-white text-2xl text-center font-semibold">Welcome, {user.name}!</h2>}
+          <div className="flex gap-5">
+            <button
+              className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
+              onClick={() => setGameState("playing")}
+            >
+              Play
+            </button>
+            {!user && <Link href="/login"
+              className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
+            >
+              Log In
+            </Link>}
+          </div>
+        </div>
+      </div>
+    );
+  } 
+  
+  else if (gameState === "paused") {
+    return (
+      <div className="w-full h-screen flex justify-center items-center bg-black/60 fixed inset-0 z-[999]">
         <button
           className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
           onClick={() => setGameState("playing")}
@@ -108,7 +151,7 @@ export default function Cards() {
     );
   } else if (gameState === "game-over") {
     return (
-      <div className="w-full h-screen flex justify-center items-center bg-black/60 absolute z-[999]">
+      <div className="flex justify-center items-center bg-black/60 fixed inset-0 z-[999]">
         <button
           className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
           onClick={() => restart()}
@@ -119,7 +162,7 @@ export default function Cards() {
     );
   } else if (gameState === "level-up") {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center bg-black/60 absolute z-[999] gap-5">
+      <div className="w-full h-screen flex flex-col justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5">
         <h2 className="text-4xl text-white">すごい！</h2>
         <button
           className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
@@ -131,9 +174,16 @@ export default function Cards() {
     );
   } else if (gameState === "won") {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center bg-green-900/60 absolute z-[999] gap-5">
-        <h2 className="text-4xl text-white text-center">You Won!</h2>
+      <div className="w-full h-screen flex flex-col justify-center items-center bg-green-900/60 fixed inset-0 z-[999] gap-5">
         <h2 className="text-4xl text-white text-center">日本語上手!</h2>
+        <h2 className="text-4xl text-white text-center">Time for the Next Section!</h2>
+        <button
+          className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
+          onClick={() => nextLevel()}
+        >
+          Next Section
+        </button>
+        
       </div>
     );
   }
