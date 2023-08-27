@@ -7,10 +7,10 @@ import GameContextProvider from '@/contexts/game-context';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Hiragana Attack',
-  description: 'Learn Hiragana with this fun game!',
-}
+// export const metadata: Metadata = {
+//   title: 'Hiragana Attack',
+//   description: 'Learn Hiragana with this fun game!',
+// }
 
 export default function RootLayout({
   children,
