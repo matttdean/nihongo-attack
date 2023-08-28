@@ -20,8 +20,6 @@ type GameContextType = {
     setLevel: React.Dispatch<React.SetStateAction<number>>;
     gameState: "main-menu" | "paused" | "playing" | "game-over" | "level-up"| "won";
     setGameState: React.Dispatch<React.SetStateAction<gameState>>;
-    loading: boolean;
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -33,7 +31,6 @@ export default function GameContextProvider({ children}: GameContextProviderProp
     const [health, setHealth] = useState<number>(3);
     const [level, setLevel] = useState<number>(1);
     const [gameState, setGameState] = useState<gameState>("main-menu");
-    const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <GameContext.Provider value={{
@@ -46,9 +43,7 @@ export default function GameContextProvider({ children}: GameContextProviderProp
         level,
         setLevel,
         gameState,
-        setGameState,
-        loading,
-        setLoading
+        setGameState
     }}>
         {children}
     </GameContext.Provider>
