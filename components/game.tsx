@@ -37,7 +37,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setLevel
   } = useGame();
 
-  const { user, setUser } = useUser();
+  const { user, setUser, loading } = useUser();
 
   useEffect(() => {
     if (gameState === "main-menu" && user !== null) {
@@ -46,7 +46,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
     if (window !== undefined && window.screen.width < 768) {
       try {
-        const res = screen.orientation.lock("portrait");
+        const res = screen.orientation.lock("portrait") as any;
       } catch (error) {
         console.log(error);
       }
@@ -191,6 +191,10 @@ export default function Game({ damageRef }: { damageRef: any }) {
     return (
       <div className="w-full h-screen flex flex-col gap-10 items-center sm:justify-center bg-zinc-800 fixed inset-0 z-[999]">
         <div className="flex flex-col gap-10 justify-center items-center w-10/12 mt-[40%] sm:mt-0  max-w-[40rem] h-[20rem] bg-zinc-950 rounded-md">
+          { loading ? <h1 className="text-white text-5xl text-center font-semibold">
+            Loading...
+          </h1> :
+          <>
           <h1 className="text-white text-5xl text-center font-semibold">
             NIHONGO ATTACK
           </h1>
@@ -232,6 +236,8 @@ export default function Game({ damageRef }: { damageRef: any }) {
               </Link>
             )}
           </div>
+          </>
+          }
         </div>
       </div>
     );
