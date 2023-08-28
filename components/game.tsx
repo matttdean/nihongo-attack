@@ -7,6 +7,7 @@ import Card from "./card";
 import { generateCards } from "../lib/generateCard";
 import { levelData } from "../lib/level-data";
 import Link from "next/link";
+import ts from "typescript";
 
 
 type Card = {
@@ -46,7 +47,8 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
     if (window !== undefined && window.screen.width < 768) {
       try {
-        const res = screen.orientation!.lock("portrait")!;
+        //@ts-ignore see if this works
+        const res = screen.orientation.lock("portrait");
       } catch (error) {
         console.log(error);
       }
