@@ -120,19 +120,19 @@ export default function Game({ damageRef }: { damageRef: any }) {
         setGameState("won");
       } else {
         setGameState("level-up");
-        setScore(0);
-        if (level === user.prefs.unLockedLevels) {
-        const prefs = account
-          .updatePrefs({ unLockedLevels: level + 1 })
-          .then((prefs) => {
-            setUser({ ...user, prefs: prefs.prefs });
-            setScore(0);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        } 
       }
+      setScore(0);
+      if (level === user.prefs.unLockedLevels) {
+      const prefs = account
+        .updatePrefs({ unLockedLevels: level + 1 })
+        .then((prefs) => {
+          setUser({ ...user, prefs: prefs.prefs });
+          setScore(0);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      } 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, setGameState]);

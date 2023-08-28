@@ -21,7 +21,6 @@ export default function LoginForm() {
         password.value
       );
       const user = await account.get();
-      console.log(user);
       setUser({$id: user.$id, email: user.email, name: user.name, prefs: user.prefs});
       setGameState("main-menu");
       router.push("/");
