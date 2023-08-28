@@ -45,17 +45,6 @@ export default function Game({ damageRef }: { damageRef: any }) {
       setLevel(user.prefs.unLockedLevels);
     }
 
-    if (window !== undefined && window.screen.width < 768) {
-      try {
-        //@ts-ignore see if this works
-        const res = screen.orientation.lock("portrait");
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-
-
   }, []);
 
   useEffect(() => {
