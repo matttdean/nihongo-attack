@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useUser } from "@/contexts/user-context";
+import { useUser, signup, updatePrefs, login } from "@/contexts/user-context";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/contexts/game-context";
 import { account, ID } from "@/appwrite";
 import Link from "next/link";
+import { sign } from "crypto";
 
 export default function SignupForm() {
   const { user, setUser } = useUser();
@@ -16,20 +17,13 @@ export default function SignupForm() {
     const { username, email, password } = e.currentTarget;
     try {
       setLoading(true);
-      const response = await account.create(
-        ID.unique(),
-        email.value,
-        password.value,
-        username.value
-      );
 
-      const userAccount = await account.createEmailSession(
-        email.value,
-        password.value
-      );
-      if (userAccount) {
-        const user = await account.get();
-        const prefs = await account.updatePrefs({ unLockedLevels: level });
+      const response = await signup(email.value, password.value, username.value);
+      const user = await login(email.value, password.value);
+
+      if (user) {
+        const prefs = await updatePrefs({unLockedLevels: 1});
+
 
         setUser({
           id: user.$id,
@@ -37,6 +31,7 @@ export default function SignupForm() {
           name: user.name,
           prefs: prefs.prefs,
         });
+        
         setGameState("main-menu");
         router.push("/");
         setLoading(false);

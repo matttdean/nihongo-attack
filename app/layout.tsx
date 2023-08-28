@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Learn Hiragana with this fun game!",
 };
 
+
 export default function RootLayout({
   children,
 }: {

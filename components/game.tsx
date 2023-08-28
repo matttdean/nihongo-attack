@@ -1,13 +1,13 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { account } from "@/appwrite";
+import React, { useEffect, useState } from "react";
 import { useGame } from "../contexts/game-context";
-import { useUser } from "../contexts/user-context";
+import { useUser, logout, updatePrefs } from "../contexts/user-context";
 import Card from "./card";
 import { generateCards } from "../lib/generateCard";
 import { levelData } from "../lib/level-data";
 import Link from "next/link";
+
 
 type Card = {
   symbol: string;
@@ -23,6 +23,7 @@ type Game = {
 
 export default function Game({ damageRef }: { damageRef: any }) {
   const [cards, setCards] = useState<any>({});
+  const [winMessage, setWinMessage] = useState<any>({});
   const {
     score,
     setScore,
@@ -42,6 +43,17 @@ export default function Game({ damageRef }: { damageRef: any }) {
     if (gameState === "main-menu" && user !== null) {
       setLevel(user.prefs.unLockedLevels);
     }
+
+    if (window !== undefined && window.screen.width < 768) {
+      try {
+        const res = screen.orientation.lock("portrait");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+
+
   }, []);
 
   useEffect(() => {
@@ -58,22 +70,35 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setGameState("playing");
     setHealth(3);
   };
+
+  const winMessages = [{message: "Perfect!", style: { color: 'green'}}, {message: "Good Job!", style: { color: 'yellow'}}, {message: "You need to study more!", style: { color: 'red'}}]
+
   const nextLevel = () => {
     setScore(0);
     setGameState("playing");
     setLevel(level + 1);
   };
-  const logout = () => {
-    account
-      .deleteSession("current")
-      .then(() => {
-        setUser(null);
-        setGameState("main-menu");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleLogout = async () => {
+    try {
+      const loggedOutUser = await logout();
+      setUser(null);
+      setGameState("main-menu");
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const handleUpdatePrefs = async () => {
+    try {
+      const prefs = await updatePrefs({ unLockedLevels: level + 1 });
+      setUser({ ...user, prefs: prefs.prefs });
+      setScore(0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const subtractHealth = () => {
     setHealth(health - 1);
@@ -90,6 +115,13 @@ export default function Game({ damageRef }: { damageRef: any }) {
       setGameState("game-over");
       setScore(0);
       setHealth(3);
+    }
+    if (health === 3) {
+      setWinMessage(winMessages[0]);
+    } else if (health === 2) {
+      setWinMessage(winMessages[1]);
+    } else if (health === 1) {
+      setWinMessage(winMessages[2]);
     }
   }, [health, setGameState]);
 
@@ -123,15 +155,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
       }
       setScore(0);
       if (level === user.prefs.unLockedLevels) {
-      const prefs = account
-        .updatePrefs({ unLockedLevels: level + 1 })
-        .then((prefs) => {
-          setUser({ ...user, prefs: prefs.prefs });
-          setScore(0);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        handleUpdatePrefs();
       } 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +210,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
                 </Link>
                 <button
                 className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
-                onClick={() => logout()}
+                onClick={() => handleLogout()}
               >
                 Log out
               </button>
@@ -252,7 +276,11 @@ export default function Game({ damageRef }: { damageRef: any }) {
   } else if (gameState === "level-up") {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5">
-        <h2 className="text-4xl text-white">すごい！</h2>
+        <h2 className="text-4xl text-white text-center"
+        style={
+          winMessage.style
+        }
+        >{winMessage.message}</h2>
         <button
           className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
           onClick={() => nextLevel()}
