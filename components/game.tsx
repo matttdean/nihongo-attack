@@ -46,7 +46,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
     if (window !== undefined && window.screen.width < 768) {
       try {
-        const res = screen.orientation.lock("portrait") as any;
+        const res = window.screen.orientation.lock("portrait");
       } catch (error) {
         console.log(error);
       }
