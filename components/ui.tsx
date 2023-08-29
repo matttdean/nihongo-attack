@@ -7,7 +7,7 @@ export default function UI() {
     const {score, target, health, gameState} = useGame();
     const {user, setUser} = useUser();
 
-    if(gameState === "main-menu" || gameState ==="level-up" || gameState === "won" ||  gameState  === "game-over") return null;
+    if(gameState !== "playing" ) return null;
 
   return (
     

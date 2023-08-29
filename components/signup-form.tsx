@@ -32,8 +32,7 @@ export default function SignupForm() {
           prefs: prefs.prefs,
         });
         
-        setGameState("main-menu");
-        router.push("/");
+        router.push("/levels");
         setLoading(false);
       }
     } catch (error) {

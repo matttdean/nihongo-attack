@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useGame } from "../contexts/game-context";
-import { useUser, logout, updatePrefs } from "../contexts/user-context";
+import { useUser, logout, updatePrefs, checkUser } from "../contexts/user-context";
 import Card from "./card";
 import { generateCards } from "../lib/generateCard";
 import { levelData } from "../lib/level-data";
 import Link from "next/link";
-import ts from "typescript";
+import { useRouter } from "next/navigation";
 
 
 type Card = {
@@ -38,14 +38,35 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setLevel
   } = useGame();
 
-  const { user, setUser, loading } = useUser();
+  const { user, setUser, loading, setLoading } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
+    if(user !== null) {
+      setLoading(false);
+      return;
+    }
+
+    checkUser().then((user) => {
+      if (user === null) {
+          setLoading(false);
+          return;
+      }
+      setUser({id: user.$id, email: user.email, name: user.name, prefs: user.prefs});
+      if (gameState === "main-menu" && user !== null) {
+      router.push("/levels");
+      }
+      setLoading(false);
+  }).catch((error) => {
+      setLoading(false);
+  })
+    
     if (gameState === "main-menu" && user !== null) {
       setLevel(user.prefs.unLockedLevels);
     }
 
   }, []);
+
 
   useEffect(() => {
     const levelNumberofCards = levelData[level - 1].numberOfCards;
@@ -145,9 +166,11 @@ export default function Game({ damageRef }: { damageRef: any }) {
         setGameState("level-up");
       }
       setScore(0);
+      if (user) {
       if (level === user.prefs.unLockedLevels) {
         handleUpdatePrefs();
       } 
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, setGameState]);
@@ -163,6 +186,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
       subtractHealth();
     }
   };
+
   if (gameState === "playing") {
     return (
       <>
@@ -180,20 +204,14 @@ export default function Game({ damageRef }: { damageRef: any }) {
     );
   } else if (gameState === "main-menu") {
     return (
+      <>
+      { loading ? (<div className="w-full h-screen flex justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5"></div>) :
+
       <div className="w-full h-screen flex flex-col gap-10 items-center sm:justify-center bg-zinc-800 fixed inset-0 z-[999]">
         <div className="flex flex-col gap-10 justify-center items-center w-10/12 mt-[40%] sm:mt-0  max-w-[40rem] h-[20rem] bg-zinc-950 rounded-md">
-          { loading ? <h1 className="text-white text-5xl text-center font-semibold">
-            Loading...
-          </h1> :
-          <>
           <h1 className="text-white text-5xl text-center font-semibold">
             NIHONGO ATTACK
           </h1>
-          {user && (
-            <h2 className="text-white text-2xl text-center font-semibold">
-              Welcome, {user.name}!
-            </h2>
-          )}
           <div className="flex gap-5">
             {user ? (
               <>
@@ -227,28 +245,35 @@ export default function Game({ damageRef }: { damageRef: any }) {
               </Link>
             )}
           </div>
-          </>
-          }
         </div>
       </div>
+      }
+      </>
     );
   } else if (gameState === "paused") {
     return (
-      <div className="w-full h-screen flex justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5">
-        <button
-          className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
-          onClick={() => setGameState("playing")}
-        >
-          Start
-        </button>
-        {user && (
-          <Link
-            className="bg-white/90 py-4 px-6 rounded-md text-black  hover:bg-white"
-            href="/levels"
+      <div className="w-full h-screen flex flex-col justify-center items-center bg-zinc-800 fixed inset-0 z-[999] gap-5">
+        <div className="flex flex-col justify-center items-center gap-2">
+          <div className="text-zinc-300 text-2xl">Target</div>
+          <span className="text-white text-8xl bg-zinc-700 rounded-md p-4">{target && target.symbol}</span>
+          <p className="text-zinc-200 text-xl">Sound: {target.sound}</p>
+        </div>
+        <div className="flex gap-4">
+          <button
+            className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
+            onClick={() => setGameState("playing")}
           >
-            Level Select
-          </Link>
-        )}
+            Start
+          </button>
+          {user && (
+            <Link
+              className="bg-white/80 py-4 px-6 rounded-md text-black  hover:bg-white"
+              href="/levels"
+            >
+              Level Select
+            </Link>
+          )} 
+        </div>
       </div>
     );
   } else if (gameState === "game-over") {

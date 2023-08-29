@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useUser } from "@/contexts/user-context";
+import { useUser, getUser } from "@/contexts/user-context";
 
 export default function Account() {
   const { user, loading } = useUser();

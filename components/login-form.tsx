@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useUser, login } from "@/contexts/user-context";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/contexts/game-context";
-import { client, account, ID } from "@/appwrite";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -16,15 +15,14 @@ export default function LoginForm() {
     const { email, password } = e.currentTarget;
     try {
       setLoading(true);
-      const user: any = await login(email.value, password.value);
+      const userAccount: any = await login(email.value, password.value);
       setUser({
-        $id: user.$id,
-        email: user.email,
-        name: user.name,
-        prefs: user.prefs,
+        id: userAccount.$id,
+        email: userAccount.email,
+        name: userAccount.name,
+        prefs: userAccount.prefs,
       });
-      setGameState("main-menu");
-      router.push("/");
+      router.push("/levels");
     } catch (error) {
       console.log(error);
       setLoading(false);

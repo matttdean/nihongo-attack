@@ -24,7 +24,7 @@ type User = {
 }
 
 
-const checkUser = async () => {
+export const checkUser = async () => {
     try {
         const user = await account.get()
         return user;
@@ -54,6 +54,16 @@ const resetPassword = async (userId: string, secret: string, password: string) =
 export const login = async (email: string, password: string) => {
     try {
         const response = await account.createEmailSession(email, password)
+        const user = await account.get();
+        console.log(user)
+        return user;
+    } catch (error) {
+        return null;
+    }
+}
+
+export const getUser = async () => {
+    try {
         const user = await account.get();
         return user;
     } catch (error) {
@@ -99,19 +109,6 @@ const UserContext = createContext<any>(null);
 export default function UserContextProvider({children}: UserContextProviderProps) {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        checkUser().then((user) => {
-            if (user === null) {
-                setLoading(false);
-                return;
-            }
-            setUser({$id: user.$id, email: user.email, name: user.name, prefs: user.prefs});
-            setLoading(false);
-        }).catch((error) => {
-            setLoading(false);
-        })
-    }, [])
 
   return (
     <UserContext.Provider value={{
