@@ -74,6 +74,9 @@ export default function Game({ damageRef }: { damageRef: any }) {
     const levelTarget = levelData[level - 1].target;
     setCards(generateCards(levelNumberofCards, levelSymbols));
     setTarget(levelTarget);
+    if(level  >  1) {
+      setGameState("paused");
+    }
     setHealth(3);
   }, [level, setTarget, setHealth, setGameState]);
 
@@ -87,7 +90,6 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
   const nextLevel = () => {
     setScore(0);
-    setGameState("playing");
     setLevel(level + 1);
   };
   const handleLogout = async () => {
@@ -231,7 +233,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
             ) : (
               <button
                 className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
-                onClick={() => setGameState("playing")}
+                onClick={() => setGameState("paused")}
               >
                 Play
               </button>
