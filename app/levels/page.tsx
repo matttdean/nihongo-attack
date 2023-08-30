@@ -46,7 +46,8 @@ export default function Levels() {
                 const user = await checkUser();
                 if (user) {
                     setUser({id: user.$id, email: user.email, name: user.name, prefs: user.prefs});
-                    // buildLevels(user.prefs.unLockedLevels);
+                     buildLevels(user.prefs.unLockedLevels);
+                     setLoading(false);
                 } else {
                     console.log("no user")
                 }
@@ -58,23 +59,7 @@ export default function Levels() {
 
     }, [])
 
-    useEffect(() => {
-        if (user) {
-            console.log(user.prefs.unLockedLevels)
-            buildLevels(user.prefs.unLockedLevels);
-            console.log('build levels')
-            setLoading(false);
-            return;
-        }
-    }, [user])
-
-    useEffect(() => {
-        
-
-    }, [currentLevels])
-
-
-
+  
     const handleLogout = async () => {
         await logout();
         setUser(null);

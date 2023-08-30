@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { useGame } from "../contexts/game-context";
 import { useUser, logout, updatePrefs, checkUser } from "../contexts/user-context";
 import Card from "./card";
@@ -35,11 +35,14 @@ export default function Game({ damageRef }: { damageRef: any }) {
     gameState,
     setGameState,
     level,
-    setLevel
+    setLevel,
+    streak,
+    setStreak
   } = useGame();
 
   const { user, setUser, loading, setLoading } = useUser();
   const router = useRouter();
+  const streakCounter = useRef(0);
 
   useEffect(() => {
     if(user !== null) {
@@ -67,6 +70,12 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
   }, []);
 
+  // useEffect(() => {
+  //   if(streak === 1){
+
+  //   }
+  // }, [streak])
+
 
   useEffect(() => {
     const levelNumberofCards = levelData[level - 1].numberOfCards;
@@ -78,12 +87,16 @@ export default function Game({ damageRef }: { damageRef: any }) {
       setGameState("paused");
     }
     setHealth(3);
+    setStreak(0);
+    streakCounter.current = 0;
   }, [level, setTarget, setHealth, setGameState]);
 
   const restart = () => {
     setScore(0);
     setGameState("playing");
     setHealth(3);
+    setStreak(0);
+    streakCounter.current = 0;
   };
 
   const winMessages = [{message: "Perfect!", style: { color: 'green'}}, {message: "Good Job!", style: { color: 'yellow'}}, {message: "You need to study more!", style: { color: 'red'}}]
@@ -91,6 +104,8 @@ export default function Game({ damageRef }: { damageRef: any }) {
   const nextLevel = () => {
     setScore(0);
     setLevel(level + 1);
+    setStreak(0);
+    streakCounter.current = 0;
   };
   const handleLogout = async () => {
     try {
@@ -116,6 +131,8 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
   const subtractHealth = () => {
     setHealth(health - 1);
+    setStreak(0);
+    streakCounter.current = 0;
     damageRef.current.classList.add("headShake");
     setTimeout(() => {
       if (damageRef.current) {
@@ -129,6 +146,8 @@ export default function Game({ damageRef }: { damageRef: any }) {
       setGameState("game-over");
       setScore(0);
       setHealth(3);
+      setStreak(0);
+      streakCounter.current = 0;
     }
     if (health === 3) {
       setWinMessage(winMessages[0]);
@@ -140,7 +159,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
   }, [health, setGameState]);
 
   useEffect(() => {
-    if (score === 5) {
+    if (score === 20) {
       if (
         level === 5 ||
         level === 10 ||
@@ -174,6 +193,19 @@ export default function Game({ damageRef }: { damageRef: any }) {
       } 
       }
     }
+    if (score > 0) {
+      streakCounter.current++;
+      console.log(streakCounter.current)
+      if (streakCounter.current === 5) {
+        setStreak(streak + 1);
+      }
+      if (streakCounter.current === 10) {
+        setStreak(streak + 1);
+      }
+      if (streakCounter.current === 15) {
+        setStreak(streak + 1);
+      }   
+  }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, setGameState]);
 

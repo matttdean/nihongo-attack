@@ -20,7 +20,7 @@ export default function Card({
 }: CardProps) {
   const [isBottom, setIsBottom] = useState<boolean>(false);
   const [cardPosition, setCardPosition] = useState(0);
-  const { target, health, setHealth } = useGame();
+  const { target, health, setHealth, streak } = useGame();
   const wasClicked = useRef(false);
 
   useEffect(() => {
@@ -45,18 +45,18 @@ export default function Card({
     return (
       <div
         className={`w-20 h-28 card absolute z-10 bg-white rounded-md ${position}`}
-        style={{ animationDelay: `${delay}s` }}
+        style={{ animationDelay: `${delay}s`} }
       >
         <div
           onClick={(e) => {
             handleClick(e);
             wasClicked.current = true;
           }}
-          className="text-black text-3xl  font-semibold text-center cursor-pointer w-20 h-28 bg-white rounded-md flex justify-center items-center absolute z-10"
+          className={`text-black text-3xl font-semibold text-center cursor-pointer w-20 h-28 bg-white rounded-md flex justify-center items-center absolute z-10`}
         >
           {symbol}
         </div>
-        <div></div>
+        { streak  > 0  && <div className={`w-20 h-28 streak-${streak} blur-lg absolute z-0`}></div> }
       </div>
     );
   }

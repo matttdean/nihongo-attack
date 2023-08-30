@@ -3,37 +3,35 @@
 @tailwind utilities;
 
 @keyframes moveDown {
-    0% {
-        transform: translateY(-200px);
-    }
-    100% {
-        transform: translateY(calc(100dvh - 112px));
-    }
+  0% {
+    transform: translateY(-200px);
+  }
+  100% {
+    transform: translateY(calc(100dvh - 112px));
+  }
 }
 
 @keyframes cardAfter {
-    0% {
-        transform: translateY(0);
-        opacity: 0.6;
-    }
-
-    100% {
-      transform: translateY(-50px);
-      opacity: 0;
-  }
-  
-}
-@keyframes cardBefore {
   0% {
-      transform: translateY(0);
-      opacity: 0.6;
+    transform: translateY(0);
+    opacity: 0.6;
   }
 
   100% {
     transform: translateY(-50px);
     opacity: 0;
+  }
 }
+@keyframes cardBefore {
+  0% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
 
+  100% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
 }
 
 @keyframes headShake {
@@ -68,13 +66,10 @@
   animation-duration: 600ms;
 }
 
-
-
 .card {
   animation: moveDown 5s linear;
   animation-fill-mode: both;
   perspective: 800px;
-  
 }
 
 .card::after {
@@ -85,19 +80,19 @@
   display: block;
   width: 100%;
   height: 100%;
-background-color: white;
+  background-color: white;
   transform: rotateX(0deg) rotateY(0deg);
   transform-origin: center center;
   transition: transform 600ms;
   backface-visibility: hidden;
   animation: cardAfter 1s linear infinite;
-  border-radius: 0.375rem/* 6px */;
+  border-radius: 0.375rem /* 6px */;
 }
 
 .card::before {
   content: "";
   position: absolute;
-  top:0;
+  top: 0;
   left: 0;
   display: block;
   width: 100%;
@@ -108,50 +103,56 @@ background-color: white;
   transition: transform 600ms;
   backface-visibility: hidden;
   animation: cardBefore 1s linear infinite 400ms;
-  border-radius: 0.375rem/* 6px */;
-
+  border-radius: 0.375rem /* 6px */;
 }
 
 .left {
-  left: 20px;
+  left: 20px!important;
 }
 .right {
-  right: 20px
+  right: 20px!important;
 }
-.center  {
-  right: 50%;
-  translate: 50%;
+.center {
+  right: 50%!important;
+  translate: 50%!important;
 }
 .correct {
   transition: background-color 600ms, scale 600ms, opacity 600ms;
-  background-color: #4CAF50;
-  opacity: 0;
-  translate: 0 0 200px;
-  animation-play-state: paused;
-  pointer-events: none;
+  background-color: #4caf50!important;
+  opacity: 0!important;
+  translate: 0 0 200px!important;
+  animation-play-state: paused!important;
+  pointer-events: none!important;
 }
 .correct-animation {
-  transition: background-color 600ms, scale 600ms, opacity 1000ms;
-  background-color: #4CAF50;
-  opacity: 0;
-  animation-play-state: paused;
-  transition: 600ms;
-  
+  transition: background-color 600ms, scale 600ms, opacity 1000ms!important;
+  background-color: #4caf50!important;
+  opacity: 0!important;
+  animation-play-state: paused!important;
+  transition: 600ms!important;
 }
 .incorrect {
   transition: background-color 600ms, scale 600ms, opacity 600ms;
-  background-color: #f44336;
-  opacity: 0;
-  animation-play-state: paused;
-  translate: 0 0 200px;
-  pointer-events: none;
+  background-color: #f44336!important;
+  opacity: 0!important;
+  animation-play-state: paused!important;
+  translate: 0 0 200px!important;
+  pointer-events: none!important;
 }
 .incorrect-animation {
   transition: background-color 600ms, scale 600ms, opacity 600ms;
-  background-color: #f44336;
-  opacity: 0;
+  background-color: #f44336!important;
+  opacity: 0!important;
+  animation-play-state: paused!important;
+  transition: 600ms!important;
+}
 
-  animation-play-state: paused;
-  transition: 600ms;
-  
+.streak-1 {
+  background-color: pink;
+}
+.streak-2 {
+  background-color: blue;
+}
+.streak-3 {
+  background-color: olivedrab;
 }
