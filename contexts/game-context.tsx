@@ -3,7 +3,7 @@
 import React, { useState, createContext, useContext } from 'react'
 
 
-type gameState = "main-menu" |  "paused" | "playing" | "game-over" | "level-up" | "won";
+type gameState = "main-menu" |  "starting" | "playing" | "game-over" | "level-up" | "won";
 
 type GameContextProviderProps = {
     children: React.ReactNode;
@@ -18,7 +18,7 @@ type GameContextType = {
     setHealth: React.Dispatch<React.SetStateAction<number>>;
     level: number;
     setLevel: React.Dispatch<React.SetStateAction<number>>;
-    gameState: "main-menu" | "paused" | "playing" | "game-over" | "level-up"| "won";
+    gameState: "main-menu" | "starting" | "playing" | "game-over" | "level-up"| "won";
     setGameState: React.Dispatch<React.SetStateAction<gameState>>;
     streak: number;
     setStreak: React.Dispatch<React.SetStateAction<number>>;

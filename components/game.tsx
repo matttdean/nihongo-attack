@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useGame } from "../contexts/game-context";
 import { useUser, logout, updatePrefs, checkUser } from "../contexts/user-context";
-import Card from "./card";
 import { generateCards } from "../lib/generateCard";
 import { levelData } from "../lib/level-data";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import MainMenu from "./main-menu";
+import Cards from "./cards";
+import GameOver from "./game-over";
+import LevelUp from "./level-up";
+import NextSection from "./next-section";
+import LoadingScreen from "./loading-screen";
+import Starting from "./starting";
 
-
-type Card = {
-  symbol: string;
-  position: string;
-  delay: number;
-  handleClick: (e: any) => void;
-};
 
 type Game = {
   symbol: string;
@@ -70,13 +68,6 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
   }, []);
 
-  // useEffect(() => {
-  //   if(streak === 1){
-
-  //   }
-  // }, [streak])
-
-
   useEffect(() => {
     const levelNumberofCards = levelData[level - 1].numberOfCards;
     const levelSymbols = levelData[level - 1].symbols;
@@ -84,7 +75,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setCards(generateCards(levelNumberofCards, levelSymbols));
     setTarget(levelTarget);
     if(level  >  1) {
-      setGameState("paused");
+      setGameState("starting");
     }
     setHealth(3);
     setStreak(0);
@@ -93,7 +84,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
 
   const restart = () => {
     setScore(0);
-    setGameState("playing");
+    setGameState("starting");
     setHealth(3);
     setStreak(0);
     streakCounter.current = 0;
@@ -106,6 +97,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setLevel(level + 1);
     setStreak(0);
     streakCounter.current = 0;
+    router.push("/level-intro");
   };
   const handleLogout = async () => {
     try {
@@ -195,7 +187,6 @@ export default function Game({ damageRef }: { damageRef: any }) {
     }
     if (score > 0) {
       streakCounter.current++;
-      console.log(streakCounter.current)
       if (streakCounter.current === 5) {
         setStreak(streak + 1);
       }
@@ -209,172 +200,35 @@ export default function Game({ damageRef }: { damageRef: any }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, setGameState]);
 
-  const handleClick = (e: any) => {
-    if (e.target.innerText === target.symbol) {
-      e.target.parentElement.classList.add("correct-animation");
-      e.target.classList.add("correct");
-      setScore(score + 1);
-    } else if (e.target.innerText !== target.symbol) {
-      e.target.parentElement.classList.add("incorrect-animation");
-      e.target.classList.add("incorrect");
-      subtractHealth();
-    }
-  };
+  if (loading) {
+    return (
+      <LoadingScreen />
+    )
+  }
 
   if (gameState === "playing") {
     return (
-      <>
-        {cards.map((card: Card, index: number) => (
-          <Card
-            key={index}
-            symbol={card.symbol}
-            position={card.position}
-            delay={index}
-            handleClick={handleClick}
-            subtractHealth={subtractHealth}
-          />
-        ))}
-      </>
+      <Cards cards={cards} subtractHealth={subtractHealth}/>
     );
   } else if (gameState === "main-menu") {
     return (
-      <>
-      { loading ? (<div className="w-full h-screen flex justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5"></div>) :
-
-      <div className="w-full h-screen flex flex-col gap-10 items-center sm:justify-center bg-zinc-800 fixed inset-0 z-[999]">
-        <div className="flex flex-col gap-10 justify-center items-center w-10/12 mt-[40%] sm:mt-0  max-w-[40rem] h-[20rem] bg-zinc-950 rounded-md">
-          <h1 className="text-white text-5xl text-center font-semibold">
-            NIHONGO ATTACK
-          </h1>
-          <div className="flex gap-5">
-            {user ? (
-              <>
-                <Link
-                  className="bg-white/90 py-4 px-6 rounded-md text-black  hover:bg-white"
-                  href="/levels"
-                >
-                  Level Select
-                </Link>
-                <button
-                className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
-                onClick={() => handleLogout()}
-              >
-                Log out
-              </button>
-            </>
-            ) : (
-              <button
-                className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
-                onClick={() => setGameState("paused")}
-              >
-                Play
-              </button>
-            )}
-            {!user && (
-              <Link
-                href="/login"
-                className="bg-white/90 py-4 px-6 rounded-md  hover:bg-white"
-              >
-                Log In
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-      }
-      </>
+      <MainMenu />
     );
-  } else if (gameState === "paused") {
+  } else if (gameState === "starting") {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center bg-zinc-800 fixed inset-0 z-[999] gap-5">
-        <div className="flex flex-col justify-center items-center gap-2">
-          <div className="text-zinc-300 text-2xl">Target</div>
-          <span className="text-white text-8xl bg-zinc-700 rounded-md p-4">{target && target.symbol}</span>
-          <p className="text-zinc-200 text-xl">Sound: {target.sound}</p>
-        </div>
-        <div className="flex gap-4">
-          <button
-            className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
-            onClick={() => setGameState("playing")}
-          >
-            Start
-          </button>
-          {user && (
-            <Link
-              className="bg-white/80 py-4 px-6 rounded-md text-black  hover:bg-white"
-              href="/levels"
-            >
-              Level Select
-            </Link>
-          )} 
-        </div>
-      </div>
+     <Starting />
     );
   } else if (gameState === "game-over") {
     return (
-      <div className="flex justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5">
-        <button
-          className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
-          onClick={() => restart()}
-        >
-          Retry
-        </button>
-        {user && (
-          <Link
-            className="bg-white/90 py-4 px-6 rounded-md text-black  hover:bg-white"
-            href="/levels"
-          >
-            Level Select
-          </Link>
-        )}
-      </div>
+      <GameOver restart={restart}/>
     );
   } else if (gameState === "level-up") {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center bg-black/60 fixed inset-0 z-[999] gap-5">
-        <h2 className="text-4xl text-white text-center"
-        style={
-          winMessage.style
-        }
-        >{winMessage.message}</h2>
-        <button
-          className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
-          onClick={() => nextLevel()}
-        >
-          Next Level
-        </button>
-        {user && (
-          <Link
-            className="bg-white/90 py-4 px-6 rounded-md text-black  hover:bg-white"
-            href="/levels"
-          >
-            Level Select
-          </Link>
-        )}
-      </div>
+      <LevelUp nextLevel={nextLevel} winMessage={winMessage}/>
     );
   } else if (gameState === "won") {
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center bg-green-900/60 fixed inset-0 z-[999] gap-5">
-        <h2 className="text-4xl text-white text-center">日本語上手!</h2>
-        <h2 className="text-4xl text-white text-center">
-          Time for the Next Section!
-        </h2>
-        <button
-          className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
-          onClick={() => nextLevel()}
-        >
-          Next Section
-        </button>
-        {user && (
-          <Link
-            className="bg-white/90 py-4 px-6 rounded-md text-black  hover:bg-white"
-            href="/levels"
-          >
-            Level Select
-          </Link>
-        )}
-      </div>
+      <NextSection nextLevel={nextLevel} />
     );
   }
 }

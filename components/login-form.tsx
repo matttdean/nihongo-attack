@@ -10,24 +10,52 @@ export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+//   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     const { email, password } = e.currentTarget;
+//     try {
+//       setLoading(true);
+//       login(email.value, password.value).then((userAccount) => {
+//         if (userAccount !== null) {
+
+        
+//       setUser({
+//         id: userAccount.$id,
+//         email: userAccount.email,
+//         name: userAccount.name,
+//         prefs: userAccount.prefs,
+//       });
+//       router.push("/levels");
+//     }
+//     setLoading(false);
+//     }). catch((error) {
+//       console.log(error);
+//       setLoading(false);
+//     })
+//   };
+
+
+const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = e.currentTarget;
     try {
-      setLoading(true);
-      const userAccount: any = await login(email.value, password.value);
-      setUser({
-        id: userAccount.$id,
-        email: userAccount.email,
-        name: userAccount.name,
-        prefs: userAccount.prefs,
-      });
-      router.push("/levels");
+        setLoading(true);
+        const userAccount = await login(email.value, password.value);
+        if (userAccount !== null) {
+            setUser({
+                id: userAccount.$id,
+                email: userAccount.email,
+                name: userAccount.name,
+                prefs: userAccount.prefs,
+            });
+            router.push("/levels");
+        }
+        setLoading(false);
     } catch (error) {
-      console.log(error);
-      setLoading(false);
+        console.log(error);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="flex flex-col justify-center items-center gap-5 w-11/12 bg-zinc-600">

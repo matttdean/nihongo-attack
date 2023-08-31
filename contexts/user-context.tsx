@@ -55,7 +55,6 @@ export const login = async (email: string, password: string) => {
     try {
         const response = await account.createEmailSession(email, password)
         const user = await account.get();
-        console.log(user)
         return user;
     } catch (error) {
         return null;
