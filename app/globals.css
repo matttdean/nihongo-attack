@@ -262,3 +262,96 @@
 .health-1 {
   @apply bg-red-300;
 }
+.w-streak-0 {
+  width: 0%;
+}
+.w-streak-1 {
+  width: 20%;
+}
+.w-streak-2 {
+  width: 40%;
+}
+.w-streak-3 {
+  width: 60%;
+}
+.w-streak-4 {
+  width: 80%;
+}
+.w-streak-5 {
+  width: 0%;
+}
+.w-streak-6 {
+  width: 20%;
+  @apply bg-amber-200;
+}
+.w-streak-7 {
+  width: 40%;
+  @apply bg-amber-200;
+}
+.w-streak-8 {
+  width: 60%;
+  @apply bg-amber-200;
+}
+.w-streak-9 {
+  width: 80%;
+  @apply bg-amber-200;
+}
+.w-streak-10 {
+  width: 0%;
+  @apply bg-amber-400;
+}
+.w-streak-11 {
+  width: 20%;
+  @apply bg-amber-400;
+}
+.w-streak-12 {
+  width: 40%;
+  @apply bg-amber-400;
+}
+.w-streak-13 {
+  width: 60%;
+  @apply bg-amber-400;
+}
+.w-streak-14 {
+  width: 80%;
+  @apply bg-amber-400;
+}
+.w-streak-15 {
+  width: 0%;
+  @apply  bg-pink-600;
+}
+.w-streak-16 {
+  width: 20%;
+  @apply bg-pink-600;
+}
+.w-streak-17 {
+  width: 40%;
+  @apply bg-pink-600;
+}
+.w-streak-18 {
+  width: 60%;
+  @apply bg-pink-600;
+}
+.w-streak-19 {
+  width: 80%;
+  @apply bg-pink-600;
+}
+.w-streak-20 {
+  width: 100%;
+  @apply bg-pink-600;
+}
+.w-health-3 {
+  width: 100%;
+  @apply bg-green-300;
+}
+.w-health-2 {
+  width: 66%;
+  @apply bg-yellow-300;
+}
+.w-health-1 {
+  width: 33%;
+  @apply bg-red-300;
+}
+.w-health-0 {
+  width: 0%;
+}

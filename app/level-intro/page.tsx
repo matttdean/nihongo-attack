@@ -20,7 +20,7 @@ export default function LevelIntroPage() {
         animate={{ opacity: 1}}
         exit={{ opacity: 0}}
         
-        className="w-full h-screen flex flex-col justify-center items-center bg-zinc-800 fixed inset-0 z-[999] gap-5">
+        className="w-full h-screen flex flex-col justify-center items-center bg-zinc-800  gap-5">
           <div className="flex flex-col justify-center items-center gap-2">
             <div className="text-zinc-300 text-2xl">Target</div>
             <span className="text-white text-8xl bg-zinc-700 rounded-md p-4">{target && target.symbol}</span>

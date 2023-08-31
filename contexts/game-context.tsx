@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext, useRef } from 'react'
 
 
-type gameState = "main-menu" |  "starting" | "playing" | "game-over" | "level-up" | "won";
+type gameState = "main-menu" |  "starting" | "playing" | "game-over" | "level-up" | "won" | "paused";
 
 type GameContextProviderProps = {
     children: React.ReactNode;
@@ -18,10 +18,12 @@ type GameContextType = {
     setHealth: React.Dispatch<React.SetStateAction<number>>;
     level: number;
     setLevel: React.Dispatch<React.SetStateAction<number>>;
-    gameState: "main-menu" | "starting" | "playing" | "game-over" | "level-up"| "won";
+    gameState: "main-menu" | "starting" | "playing" | "game-over" | "level-up"| "won" | "paused";
     setGameState: React.Dispatch<React.SetStateAction<gameState>>;
     streak: number;
     setStreak: React.Dispatch<React.SetStateAction<number>>;
+    streakCounter: number;
+    setStreakCounter: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -34,6 +36,8 @@ export default function GameContextProvider({ children}: GameContextProviderProp
     const [level, setLevel] = useState<number>(1);
     const [gameState, setGameState] = useState<gameState>("main-menu");
     const [streak, setStreak] = useState<number>(0);
+    const [streakCounter, setStreakCounter] = useState<number>(0);
+
 
   return (
     <GameContext.Provider value={{
@@ -48,7 +52,9 @@ export default function GameContextProvider({ children}: GameContextProviderProp
         gameState,
         setGameState,
         streak,
-        setStreak
+        setStreak,
+        streakCounter,
+        setStreakCounter
     }}>
         {children}
     </GameContext.Provider>
