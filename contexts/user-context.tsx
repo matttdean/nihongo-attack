@@ -1,7 +1,7 @@
 'use client'
 import React, { createContext, useState, useContext, useEffect} from 'react'
 import { ID, account } from '@/appwrite'
-import { type } from 'os';
+
 
 type UserContextProviderProps = {
     children: React.ReactNode;
@@ -15,7 +15,7 @@ type UserContextType = {
 }
 
 type User = {
-    $id: string;
+    id: string;
     email: string;
     name: string;
     prefs: {
@@ -57,7 +57,8 @@ export const login = async (email: string, password: string) => {
         const user = await account.get();
         return user;
     } catch (error) {
-        return null;
+        console.log("error loginfunc", error);
+        return error;
     }
 }
 
@@ -66,7 +67,7 @@ export const getUser = async () => {
         const user = await account.get();
         return user;
     } catch (error) {
-        return null;
+        return error;
     }
 }
 
@@ -79,7 +80,7 @@ export const signup = async (email: string, password: string, username: string) 
             username
         )
     } catch (error) {
-        return null;
+        return error;
     }
 }
 
@@ -89,7 +90,7 @@ export const updatePrefs = async (newPrefs: any) => {
         const prefs: any = await account.updatePrefs(newPrefs);
         return prefs;
     } catch (error) {
-        return null;
+        return error;
     }
 }
 

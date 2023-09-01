@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useUser, login } from "@/contexts/user-context";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/contexts/game-context";
+import { account } from "@/appwrite";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -9,80 +10,66 @@ export default function LoginForm() {
   const { setGameState, setLevel } = useGame();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-//   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     const { email, password } = e.currentTarget;
-//     try {
-//       setLoading(true);
-//       login(email.value, password.value).then((userAccount) => {
-//         if (userAccount !== null) {
-
-        
-//       setUser({
-//         id: userAccount.$id,
-//         email: userAccount.email,
-//         name: userAccount.name,
-//         prefs: userAccount.prefs,
-//       });
-//       router.push("/levels");
-//     }
-//     setLoading(false);
-//     }). catch((error) {
-//       console.log(error);
-//       setLoading(false);
-//     })
-//   };
-
-
-const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = e.currentTarget;
-    try {
-        setLoading(true);
-        const userAccount = await login(email.value, password.value);
-        if (userAccount !== null) {
-            setUser({
-                id: userAccount.$id,
-                email: userAccount.email,
-                name: userAccount.name,
-                prefs: userAccount.prefs,
-            });
-            router.push("/levels");
+    setLoading(true);
+    const userAccount = account.createEmailSession(email.value, password.value);
+    userAccount
+      .then((userAccount: any) => {
+        if (userAccount) {
+          setUser({
+            id: userAccount.$id,
+            email: userAccount.email,
+            name: userAccount.name,
+            prefs: userAccount.prefs,
+          });
+          router.push("/levels");
         }
         setLoading(false);
-    } catch (error) {
-        console.log(error);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        setError(error.message);
         setLoading(false);
-    }
-};
+      });
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5 w-11/12 bg-zinc-600">
+    <div className="flex flex-col justify-center items-center gap-5 w-11/12">
       <form
-        className="sm:w-[30rem] w-full flex flex-col bg-zinc-200 py-6 px-4 gap-2 rounded-md"
+        className="sm:w-[30rem] w-full flex flex-col bg-zinc-200 py-6 px-4 gap-2 rounded-lg shadow-md"
         onSubmit={handleLogin}
       >
         <label className="text-sm" htmlFor="username">
           Email
         </label>
         <input
-          className="rounded-sm p-2 mb-4"
+          className="rounded-md p-2 mb-4"
           type="email"
           name="email"
           id="email"
           placeholder="Email"
+          required
         />
         <label className="text-sm" htmlFor="password">
           Password
         </label>
         <input
-          className="rounded-sm p-2 mb-4"
+          className="rounded-md p-2 mb-4"
           type="password"
           name="password"
           id="password"
           placeholder="Password"
+          required
         />
+        {error && (
+          <p className="bg-red-200 text-red-700 text-sm rounded-md p-2 mb-4">
+            {error}
+          </p>
+        )}
         <button
           className="rounded-full bg-zinc-700 p-2 text-white flex justify-center items-center"
           type="submit"

@@ -79,6 +79,7 @@ export default function Levels() {
       }
     };
     checkUserAndBuildLevels();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = async () => {
@@ -99,6 +100,7 @@ export default function Levels() {
         setNotLastPage(false);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
 
@@ -106,19 +108,20 @@ export default function Levels() {
     <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1}}
-    exit={{ opacity: 0}}
+    // exit={{ opacity: 0}}
+    className="w-full h-screen flex justify-center items-center bg-zinc-600  gap-5"
     >
       {!loading && (
         <div className="flex justify-center items-center w-full h-screen">
-          <div className="absolute top-5 left-5 flex gap-2  bg-zinc-700 py-1 px-2">
-            <div>{user && user.name }</div>
-            <div> {skillMessage[skill]} </div>
-            <Link href='/account' className=" underline">
-               go to account
+          <div className="absolute top-5 left-5 right-5 flex gap-2  bg-zinc-300 p-3 flex-wrap rounded-md">
+            <div className="basis-full text-xl">{user && user.name }</div>
+            <div className="text-sm"> {skillMessage[skill]} </div>
+            <Link href='/account' className=" underline mr-0 ml-auto text-sm hover:text-amber-700">
+              account details
             </Link>
               
           </div>
-          <div className="flex flex-col justify-center items-center  min-h-[460px]">
+          <div className="flex flex-col justify-center items-center min-h-[460px] gap-5">
             <h1 className="text-4xl text-white/90">Choose a level</h1>
             <motion.div 
             initial={{ y: 25, opacity: 0 }}

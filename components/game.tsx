@@ -20,6 +20,9 @@ type Game = {
   position: any;
 };
 
+
+const winMessages = [{message: "Perfect!", style: { color: 'green'}}, {message: "Good Job!", style: { color: 'yellow'}}, {message: "You need to study more!", style: { color: 'red'}}]
+
 export default function Game({ damageRef }: { damageRef: any }) {
   const [cards, setCards] = useState<any>({});
   const [winMessage, setWinMessage] = useState<any>({});
@@ -69,6 +72,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
       setLevel(user.prefs.unLockedLevels);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -83,7 +87,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setHealth(3);
     setStreak(0);
     setStreakCounter(0);
-  }, [level, setTarget, setHealth, setGameState]);
+  }, [level, setTarget, setHealth, setGameState, setStreak, setStreakCounter]);
 
   const restart = () => {
     setScore(0);
@@ -93,7 +97,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     setStreakCounter(0);
   };
 
-  const winMessages = [{message: "Perfect!", style: { color: 'green'}}, {message: "Good Job!", style: { color: 'yellow'}}, {message: "You need to study more!", style: { color: 'red'}}]
+  
 
   const nextLevel = () => {
     setGameState("paused");
@@ -152,7 +156,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     } else if (health === 1) {
       setWinMessage(winMessages[2]);
     }
-  }, [health, setGameState]);
+  }, [health, setGameState, setScore, setHealth, setStreak, setStreakCounter, setWinMessage]);
 
   useEffect(() => {
     if (score === 20) {
@@ -206,6 +210,7 @@ export default function Game({ damageRef }: { damageRef: any }) {
     if (streakCounter === 15) {
       setStreak(streak + 1);
     }   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [streakCounter]);
 
   if (loading) {

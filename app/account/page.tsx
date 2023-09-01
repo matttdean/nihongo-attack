@@ -30,6 +30,7 @@ export default function Account() {
       .catch((error) => {
         setLoading(false);
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = async () => {
@@ -52,34 +53,33 @@ export default function Account() {
         ></motion.div>
       ) : (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
           className="flex flex-wrap gap-5 p-6"
-        >
-          <h1>Account</h1>
-          <p className="w-full">Name: {user?.name}</p>
-          <p className="w-full">Email: {user?.email}</p>
-          <p className="w-full">
-            Levels Unlocked: {user?.prefs.unLockedLevels}
-          </p>
-          <button 
-          onClick={handleLogout}
-          className="bg-white/90 py-4 px-6 rounded-md hover:bg-white m-2 w-32 flex justify-center items-center">
-            Logout
-          </button>
-          <Link
-            href="/levels"
-            className="bg-white/90 py-4 px-6 rounded-md hover:bg-white m-2 w-32 text-center"
-          >
-            Level Select
-          </Link>
-          <button className="bg-white/90 py-4 px-6 rounded-md hover:bg-white m-2 w-32">
-            Change Password
-          </button>
-          <button className="bg-white/90 py-4 px-6 rounded-md hover:bg-white m-2 w-32">
-            Delete Account
-          </button>
+        ><div className="bg-zinc-200 p-6 rounded-md">
+          
+            <h1 className="mb-1">Account</h1>
+            <div className="w-full h-[1px] bg-zinc-800 mb-2"/>
+            <p className="w-full mb-1"><span className="text-xs">Name:</span> {user?.name}</p>
+            <p className="w-full mb-1"><span className="text-xs">Email:</span> {user?.email}</p>
+            <p className="w-full mb-1">
+            <span className="text-xs">Levels Unlocked:</span> {user?.prefs.unLockedLevels}
+            </p>
+            <div className="flex">
+              <button
+              onClick={handleLogout}
+              className="bg-white/90 py-2 px-3 rounded-md hover:bg-white m-2 w-32 flex justify-center items-center">
+                Logout
+              </button>
+              <Link
+                href="/levels"
+                className="bg-white/90 py-2 px-3 rounded-md hover:bg-white m-2 w-32 text-center"
+              >
+                Level Select
+              </Link>
+            </div>
+        </div>
         </motion.div>
       )}
     </>

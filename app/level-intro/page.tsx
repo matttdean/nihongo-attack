@@ -13,12 +13,13 @@ export default function LevelIntroPage() {
 
     useEffect(() => {
         setTarget(levelData[level - 1].target);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
         <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1}}
-        exit={{ opacity: 0}}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0}}
+        exit={{ opacity: 0, y: 50}}
         
         className="w-full h-screen flex flex-col justify-center items-center bg-zinc-800  gap-5">
           <div className="flex flex-col justify-center items-center gap-2">
@@ -26,17 +27,17 @@ export default function LevelIntroPage() {
             <span className="text-white text-8xl bg-zinc-700 rounded-md p-4">{target && target.symbol}</span>
             <p className="text-zinc-200 text-xl">Sound: {target.sound}</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-4  items-center">
             <Link
                 href="/"
-              className="bg-white/80 py-4 px-6 rounded-md  hover:bg-white"
+              className="bg-white/80 py-4 px-6 w-44 rounded-md text-center  hover:bg-white"
               onClick={() => setGameState("starting")}
             >
               Start
             </Link>
             {user && (
               <Link
-                className="bg-white/80 py-4 px-6 rounded-md text-black  hover:bg-white"
+                className="bg-white/80 py-1 px-2 rounded-md text-black text-center w-32  hover:bg-white"
                 href="/levels"
               >
                 Level Select
